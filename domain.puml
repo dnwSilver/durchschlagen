@@ -1,0 +1,42 @@
+@startuml glossery
+
+class User {
+    ----
+    Пользователь
+}
+
+entity Lot {
+    ---
+    Продаваемый товар
+}
+
+entity Auction {
+    ---
+    Аукцион
+}
+
+entity Bet {
+    cost: бабки
+    ---
+    Ставка
+}
+
+entity Comment {
+    ---
+    Комментарий
+}
+
+entity Wallet {
+    money: бабки
+    ---
+    Кошелек
+}
+
+Auction --{ Bet
+User --{ Bet
+User --{ Lot
+Auction -- Lot
+Comment }-- Auction
+User --{ Comment
+User -- Wallet
+@enduml
