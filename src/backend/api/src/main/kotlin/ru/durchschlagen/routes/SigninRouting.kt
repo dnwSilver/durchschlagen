@@ -14,21 +14,24 @@ data class RequestBodyDTO(val login: String? = null, val password: String? = nul
 fun Route.signInRouting() {
     route("/signin") {
         post {
-            val user = call.receive<RequestBodyDTO>()
-            val login = user.login ?: return@post call.respondText(
+            val userDTO = call.receive<RequestBodyDTO>()
+            val login = userDTO.login ?: return@post call.respondText(
                 "Missing login",
                 status = HttpStatusCode.BadRequest
             )
-            val password = user.password ?: return@post call.respondText(
+            val password = userDTO.password ?: return@post call.respondText(
                 "Missing password",
                 status = HttpStatusCode.BadRequest
             )
 
-            userStorage.find { it.login == login && it.password == password } ?: return@post call.respondText(
-                "Incorrect login and password pair",
-                status = HttpStatusCode.Unauthorized
-            )
+            val user =
+                userStorage.find { it.login == login && it.password == password } ?: return@post call.respondText(
+                    "Incorrect login and password pair",
+                    status = HttpStatusCode.Unauthorized
+                )
 
+
+            call.respond(user)
             call.response.status(HttpStatusCode.Created)
         }
 

@@ -3,20 +3,12 @@ package ru.durchschlagen
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.server.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import ru.durchschlagen.plugins.configureRouting
-import ru.durchschlagen.plugins.configureSerialization
 
-class ApplicationTest {
+class SignInEndpointTest {
     @Test
-    fun testSignInSuccess() = testApplication {
-        //todo Написать hoc
-        application {
-            configureRouting()
-            configureSerialization()
-        }
+    fun testSignInSuccess() = apiTestApplication {
         val response = client.post("/signin") {
             contentType(ContentType.Application.Json)
             setBody(
@@ -29,14 +21,17 @@ class ApplicationTest {
             )
         }
         assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals(
+            """
+                {
+                    "tkn":"ewogICAgImlkIjogMSwKICAgICJuYW1lIjogIkplYW4gVmFsamVhbiIsCiAgICAiZW1haWwiOiAiTGVzQE1pc8OpcmFibGVzLmZyIiwKICAgICJyb2xlIjogImN1c3RvbWVyIgp9",
+                }
+            """.trimIndent(), response.bodyAsText()
+        )
     }
 
     @Test
-    fun testSignInWithoutLogin() = testApplication {
-        application {
-            configureRouting()
-            configureSerialization()
-        }
+    fun testSignInWithoutLogin() = apiTestApplication {
         val response = client.post("/signin") {
             contentType(ContentType.Application.Json)
             setBody(
@@ -52,11 +47,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun testSignInWithoutPassword() = testApplication {
-        application {
-            configureRouting()
-            configureSerialization()
-        }
+    fun testSignInWithoutPassword() = apiTestApplication {
         val response = client.post("/signin") {
             contentType(ContentType.Application.Json)
             setBody(
@@ -72,11 +63,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun testSignInFail() = testApplication {
-        application {
-            configureRouting()
-            configureSerialization()
-        }
+    fun testSignInFail() = apiTestApplication {
         val response = client.post("/signin") {
             contentType(ContentType.Application.Json)
             setBody(
@@ -88,7 +75,6 @@ class ApplicationTest {
                 """.trimIndent()
             )
         }
-        //todo подколючить kotest
         assertEquals(HttpStatusCode.Unauthorized, response.status)
     }
 }
