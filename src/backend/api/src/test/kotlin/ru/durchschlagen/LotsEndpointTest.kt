@@ -10,19 +10,10 @@ class LotsEndpointTest {
     @Test
     fun testSearchLotsSuccess() = apiTestApplication {
         val response = client.get("/lots")
-        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals(HttpStatusCode.OK, response.status)
         assertEquals(
-            """
-                {
-                    "lots": [
-                        {
-                            "id": 1,
-                            "name": "Pan",
-                            "preview": "~/img/lot/pan.jpeg"
-                        }
-                    ]
-                }
-            """.trimIndent(), response.bodyAsText()
+            """[{"id":1,"name":"Pan","preview":"~/img/lot/pan.jpeg"},{"id":2,"name":"A piece of bread","preview":"~/img/32.jpeg"}]""",
+            response.bodyAsText()
         )
     }
 
@@ -30,75 +21,34 @@ class LotsEndpointTest {
     fun testCreateLotSuccess() = apiTestApplication {
         val response = client.post("/lots") {
             contentType(ContentType.Application.Json)
-            setBody(
-                """
-                    {
-                        "name": "Apple Pen",
-                        "preview": "~/img/lot/pen.jpeg"
-                    }
-                """.trimIndent()
-            )
+            setBody("""{"name": "Apple Pen","preview": "~/img/lot/pen.jpeg"}""")
         }
         assertEquals(HttpStatusCode.Created, response.status)
-        assertEquals(
-            """
-                {
-                    "lots": [
-                        {
-                            "id": 1,
-                            "name": "Pan",
-                            "preview": "~/img/lot/pan.jpeg"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Apple Pen",
-                            "preview": "~/img/lot/pen.jpeg"
-                        }
-                    ]
-                }
-            """.trimIndent(), response.bodyAsText()
-        )
+        assertEquals("""{"id":3,"name":"Apple Pen","preview":"~/img/lot/pen.jpeg"}""", response.bodyAsText())
     }
 
     @Test
     fun testUpdateLotSuccess() = apiTestApplication {
         val response = client.patch("/lots/1") {
             contentType(ContentType.Application.Json)
-            setBody(
-                """
-                    {
-                        "name": "Apple Pan",
-                        "preview": "~/img/lot/pen.jpeg"
-                    }
-                """.trimIndent()
-            )
+            setBody("""{"name": "Apple Pen","preview": "~/img/lot/pen.jpeg"}""")
         }
         assertEquals(HttpStatusCode.OK, response.status)
         assertEquals(
-            """
-                {
-                    "lots": [
-                        {
-                            "id": 1,
-                            "name": "Apple Pen",
-                            "preview": "~/img/lot/pen.jpeg"
-                        }
-                    ]
-                }
-            """.trimIndent(), response.bodyAsText()
+            """{"id":1,"name":"Apple Pen","preview":"~/img/lot/pen.jpeg"}""", response.bodyAsText()
         )
     }
 
     @Test
     fun testDeleteLotSuccess() = apiTestApplication {
         val response = client.delete("/lots/1")
-        assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(
-            """
-                {
-                    "lots": []
-                }
-            """.trimIndent(), response.bodyAsText()
-        )
+        assertEquals(HttpStatusCode.Accepted, response.status)
+        assertEquals("Lot removed correctly", response.bodyAsText())
+    }
+
+    @Test
+    fun testDeleteLotFailure() = apiTestApplication {
+        val response = client.delete("/lots/100")
+        assertEquals(HttpStatusCode.NotFound, response.status)
     }
 }

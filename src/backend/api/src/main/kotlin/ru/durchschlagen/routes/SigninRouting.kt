@@ -8,9 +8,6 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import userStorage
 
-@Serializable
-data class RequestBodyDTO(val login: String? = null, val password: String? = null)
-
 fun Route.signInRouting() {
     route("/signin") {
         post {
@@ -30,7 +27,6 @@ fun Route.signInRouting() {
                     status = HttpStatusCode.Unauthorized
                 )
 
-
             call.respond(user)
             call.response.status(HttpStatusCode.Created)
         }
@@ -40,3 +36,6 @@ fun Route.signInRouting() {
         }
     }
 }
+
+@Serializable
+data class RequestBodyDTO(val login: String? = null, val password: String? = null)

@@ -12,64 +12,8 @@ class AuctionsEndpointTest {
         val response = client.get("/auctions")
         assertEquals(HttpStatusCode.OK, response.status)
         assertEquals(
-            """
-                {
-                    "auctions": [
-                        {
-                            "id": 1,
-                            "status": "active",
-                            "owner": "Jean",
-                            "title": "Fresh bread",
-                            "lot": {
-                                "name": "A piece of bread",
-                                "preview": "~/img/32.jpeg"
-                            },
-                            "bets": [
-                                {
-                                    "owner": "Javert Inspector",
-                                    "cost": 1000,
-                                    "date": "2022.02.08 12:10"
-                                },
-                                {
-                                    "owner":"Gavroche Thénardier",
-                                    "cost": 1100,
-                                    "date":"2022.02.08 12:13"
-                                }
-                            ],
-                            "comments":[
-                                {
-                                    "owner": "Javert Inspector",
-                                    "message": "Do you have documents for bread?"
-                                    "date":"2022.02.08 12:11"
-                                }
-                            ],
-                            "end": "2022.02.08 19:30"
-                            "cost": 1223,
-                        },
-                        {
-                            "id": 2,
-                            "status": "close",
-                            "owner": "Javert",
-                            "title": "Super frying pan for sale",
-                            "lot": {
-                                "name": "Pan",
-                                "preview": "~/img/lot/pan.jpeg"
-                            },
-                            "bets": [
-                                {
-                                    "owner":"Gavroche Thénardier",
-                                    "cost": 14000,
-                                    "date":"2022.02.08 12:29"
-                                }
-                            ],
-                            "comments": [],
-                            "end": "2022.02.08 12:30"
-                            "cost": 13300,
-                        }
-                    ], 
-                    "total": 2,
-                }
-            """.trimIndent(), response.bodyAsText()
+            """[{"id":1,"status":"active","owner":"Jean Valjean","title":"Fresh bread","lot":{"name":"A piece of bread","preview":"~/img/32.jpeg"},"bets":[{"owner":"Javert Inspector","cost":1000,"date":"2022.02.08 12:10"},{"owner":"Gavroche Thénardier","cost":1100,"date":"2022.02.08 12:13"}],"comments":[{"owner":"Javert Inspector","message":"Do you have documents for bread?","date":"2022.02.08 12:11"}],"end":"2022.02.08 19:30","cost":1223},{"id":2,"status":"close","owner":"Javert Inspector","title":"Super frying pan for sale","lot":{"name":"Pan","preview":"~/img/lot/pan.jpeg"},"bets":[{"owner":"Gavroche Thénardier","cost":14000,"date":"2022.02.08 12:29"}],"comments":[],"end":"2022.02.08 12:30","cost":13300}]""",
+            response.bodyAsText()
         )
     }
 
