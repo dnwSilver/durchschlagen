@@ -2,10 +2,15 @@ package ru.durchschlagen.models
 
 import kotlinx.serialization.Serializable
 
+enum class AuctionStatus {
+    ACTIVE,
+    CLOSE
+}
+
 @Serializable
 data class Auction(
     val id: Int,
-    var status: String?,
+    var status: AuctionStatus?,
     var title: String?,
     var lot_id: Int,
     var owner_id: Int,
@@ -13,10 +18,11 @@ data class Auction(
     var cost: Int,
 )
 
+var auctionLastId = 2
 val auctionStorage = mutableListOf(
     Auction(
         id = 1,
-        status = "active",
+        status = AuctionStatus.ACTIVE,
         title = "Fresh bread",
         lot_id = 2,
         owner_id = 1,
@@ -25,7 +31,7 @@ val auctionStorage = mutableListOf(
     ),
     Auction(
         id = 2,
-        status = "close",
+        status = AuctionStatus.CLOSE,
         title = "Super frying pan for sale",
         lot_id = 1,
         owner_id = 2,

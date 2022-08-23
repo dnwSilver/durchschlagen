@@ -11,6 +11,7 @@ data class Comment(
     val date: String?
 )
 
+var commentLastId = 1
 val commentStorage = mutableListOf(
     Comment(
         id = 1,

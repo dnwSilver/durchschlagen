@@ -11,6 +11,7 @@ data class Bet(
     val date: String?
 )
 
+var betLastId = 3
 val betStorage = mutableListOf(
     Bet(
         id = 1,

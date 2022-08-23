@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import ru.durchschlagen.models.Lot
+import ru.durchschlagen.models.lotLastId
 import ru.durchschlagen.models.lotStorage
 
 fun Route.lotsRouting() {
@@ -26,8 +27,7 @@ fun Route.lotsRouting() {
             body.name ?: return@post call.respondText(
                 "Missing name", status = HttpStatusCode.BadRequest
             )
-            val lastLot = lotStorage.maxByOrNull { it.id }
-            val newLot = Lot((lastLot?.id ?: 0) + 1, body.name, body.preview)
+            val newLot = Lot(++lotLastId, body.name, body.preview)
             lotStorage.add(newLot)
             call.respond(newLot)
             call.response.status(HttpStatusCode.Created)

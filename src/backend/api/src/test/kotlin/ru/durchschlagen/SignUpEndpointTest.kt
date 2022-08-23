@@ -11,25 +11,12 @@ class SignUpEndpointTest {
     fun testSignUpSuccess() = apiTestApplication {
         val response = client.post("/signup") {
             contentType(ContentType.Application.Json)
-            setBody(
-                """
-                    {
-                        "login": "Javert",
-                        "password: "stars",
-                        "firstName: "Javert",
-                        "lastName: "Inspector",
-                        "email: "Javert@Les@Misérables.fr"
-                    }
-                """.trimIndent()
-            )
+            setBody("""{"login":"Marius","password":"vivelafrance","firstName":"Marius","lastName":"Pontmercy","email":"Marius@Les@Misérables.fr"}""")
         }
         assertEquals(HttpStatusCode.Created, response.status)
         assertEquals(
-            """
-                {
-                    "tkn":"ewogICAgImlkIjogMiwKICAgICJuYW1lIjogIkphdmVydCBJbnNwZWN0b3IiLAogICAgImVtYWlsIjogIkphdmVydEBNaXPDqXJhYmxlcy5mciIKICAgICJyb2xlIjogImN1c3RvbWVyIgp9",
-                }
-            """.trimIndent(), response.bodyAsText()
+            """{"tkn":"eyJpZCI6NCwibmFtZSI6Ik1hcml1cyBQb250bWVyY3kiLCJlbWFpbCI6Ik1hcml1c0BMZXNATWlzw6lyYWJsZXMuZnIiLCJyb2xlIjoiQ1VTVE9NRVIifQ=="}""",
+            response.bodyAsText()
         )
     }
 
@@ -37,35 +24,16 @@ class SignUpEndpointTest {
     fun testSignUpConflict() = apiTestApplication {
         val response = client.post("/signup") {
             contentType(ContentType.Application.Json)
-            setBody(
-                """
-                    {
-                        "login": "Jean",
-                        "password: "stars",
-                        "firstName: "Javert",
-                        "lastName: "Inspector",
-                        "email: "Jean@Les@Misérables.fr"
-                    }
-                """.trimIndent()
-            )
+            setBody("""{"login":"Jean","password": "stars","firstName":"Javert","lastName":"Inspector","email":"Jean@Les@Misérables.fr"}""")
         }
         assertEquals(HttpStatusCode.Conflict, response.status)
     }
 
     @Test
-    fun testSignInWithoutPassword() = apiTestApplication {
+    fun testSignUpWithoutPassword() = apiTestApplication {
         val response = client.post("/signup") {
             contentType(ContentType.Application.Json)
-            setBody(
-                """
-                    {
-                        "login": "Jean",
-                        "firstName: "Javert",
-                        "lastName: "Inspector",
-                        "email: "Jean@Les@Misérables.fr"
-                    }
-                """.trimIndent()
-            )
+            setBody("""{"login":"Jean","firstName":"Javert","lastName":"Inspector","email":"Jean@Les@Misérables.fr"}""")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
         assertEquals("Missing password", response.bodyAsText())

@@ -11,22 +11,12 @@ class SignInEndpointTest {
     fun testSignInSuccess() = apiTestApplication {
         val response = client.post("/signin") {
             contentType(ContentType.Application.Json)
-            setBody(
-                """
-                    {
-                        "login": "Jean", 
-                        "password": "24601"
-                    }
-                """.trimIndent()
-            )
+            setBody("""{"login":"Jean","password":"24601"}""")
         }
         assertEquals(HttpStatusCode.Created, response.status)
         assertEquals(
-            """
-                {
-                    "tkn":"ewogICAgImlkIjogMSwKICAgICJuYW1lIjogIkplYW4gVmFsamVhbiIsCiAgICAiZW1haWwiOiAiTGVzQE1pc8OpcmFibGVzLmZyIiwKICAgICJyb2xlIjogImN1c3RvbWVyIgp9",
-                }
-            """.trimIndent(), response.bodyAsText()
+            """{"tkn":"eyJpZCI6MSwibmFtZSI6IkplYW4gVmFsamVhbiIsImVtYWlsIjoiTGVzQE1pc8OpcmFibGVzLmZyIiwicm9sZSI6IkNVU1RPTUVSIn0="}""",
+            response.bodyAsText()
         )
     }
 
@@ -34,13 +24,7 @@ class SignInEndpointTest {
     fun testSignInWithoutLogin() = apiTestApplication {
         val response = client.post("/signin") {
             contentType(ContentType.Application.Json)
-            setBody(
-                """
-                    {
-                        "password": "24601"
-                    }
-                """.trimIndent()
-            )
+            setBody("""{"password": "24601"}""")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
         assertEquals("Missing login", response.bodyAsText())

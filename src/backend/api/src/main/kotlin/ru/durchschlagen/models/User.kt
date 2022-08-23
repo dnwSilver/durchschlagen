@@ -8,12 +8,44 @@ data class User(
     val firstName: String,
     val lastName: String,
     val email: String,
+    val role: UserRoleType,
 )
 
+enum class UserRoleType {
+    ADMIN,
+    CUSTOMER
+}
+
+var userLastId = 3
+
 val userStorage = mutableListOf(
-    User(1, "Jean", "24601", "Jean", "Valjean", "Les@Misérables.fr"),
-    User(2, "Javert", "stars", "Javert", "Inspector", "Javert@Misérables.fr"),
-    User(3, "Gavroche", "thekingisdeatch", "Gavroche", "Thénardier", "Gavroche@Misérables.fr")
+    User(
+        id = 1,
+        login = "Jean",
+        password = "24601",
+        firstName = "Jean",
+        lastName = "Valjean",
+        email = "Les@Misérables.fr",
+        role = UserRoleType.CUSTOMER
+    ),
+    User(
+        id = 2,
+        login = "Javert",
+        password = "stars",
+        firstName = "Javert",
+        lastName = "Inspector",
+        email = "Javert@Misérables.fr",
+        role = UserRoleType.CUSTOMER
+    ),
+    User(
+        id = 3,
+        login = "Gavroche",
+        password = "thekingisdeatch",
+        firstName = "Gavroche",
+        lastName = "Thénardier",
+        email = "Gavroche@Misérables.fr",
+        role = UserRoleType.CUSTOMER
+    )
 )
 
 fun getUserName(userId: Int): String = userStorage
