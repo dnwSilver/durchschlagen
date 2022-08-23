@@ -1,3 +1,6 @@
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
+import java.util.Date
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,8 +15,7 @@ data class User(
 )
 
 enum class UserRoleType {
-    ADMIN,
-    CUSTOMER
+    ADMIN, CUSTOMER
 }
 
 var userLastId = 3
@@ -27,8 +29,7 @@ val userStorage = mutableListOf(
         lastName = "Valjean",
         email = "Les@Misérables.fr",
         role = UserRoleType.CUSTOMER
-    ),
-    User(
+    ), User(
         id = 2,
         login = "Javert",
         password = "stars",
@@ -36,8 +37,7 @@ val userStorage = mutableListOf(
         lastName = "Inspector",
         email = "Javert@Misérables.fr",
         role = UserRoleType.CUSTOMER
-    ),
-    User(
+    ), User(
         id = 3,
         login = "Gavroche",
         password = "thekingisdeatch",
@@ -48,10 +48,19 @@ val userStorage = mutableListOf(
     )
 )
 
-fun getUserName(userId: Int): String = userStorage
-    .find {
-        it.id == userId
-    }
-    .let {
-        "${it?.firstName} ${it?.lastName}"
-    }
+fun getUserName(userId: Int): String = userStorage.find {
+    it.id == userId
+}.let {
+    "${it?.firstName} ${it?.lastName}"
+}
+
+fun getToken(user: User): String = JWT.create()
+    .withAudience("http://0.0.0.0:8080/")
+    .withIssuer("http://0.0.0.0:8080/")
+    .withClaim("user_id", user.id)
+    .withClaim("login", user.login)
+    .withClaim("username", getUserName(user.id))
+    .withClaim("email", user.email)
+    .withClaim("role", user.role.toString())
+    .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+    .sign(Algorithm.HMAC256("secret"))

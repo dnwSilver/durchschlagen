@@ -1,26 +1,24 @@
 package ru.durchschlagen.routes
 
 import UserRoleType
-import getUserName
+import getToken
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.util.Base64
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import userStorage
 
 fun Route.signInRouting() {
     route("/signin") {
         post {
-            val userDTO = call.receive<RequestBodyDTO>()
-            val login = userDTO.login ?: return@post call.respondText(
+            val body = call.receive<RequestBodyDTO>()
+
+            val login = body.login ?: return@post call.respondText(
                 "Missing login", status = HttpStatusCode.BadRequest
             )
-            val password = userDTO.password ?: return@post call.respondText(
+            val password = body.password ?: return@post call.respondText(
                 "Missing password", status = HttpStatusCode.BadRequest
             )
 
@@ -30,21 +28,7 @@ fun Route.signInRouting() {
                 )
 
 
-            call.respond(
-                ResponseSignIn(
-                    tkn = Base64.getEncoder().encodeToString(
-                        Json.encodeToString(
-                            ResponseUserDTO(
-                                id = user.id,
-                                name = getUserName(user.id),
-                                email = user.email,
-                                role = user.role
-                            )
-                        ).toByteArray()
-                    )
-                )
-            )
-            call.response.status(HttpStatusCode.Created)
+            call.respond(hashMapOf("token" to getToken(user)))
         }
 
         delete("{id?}") {

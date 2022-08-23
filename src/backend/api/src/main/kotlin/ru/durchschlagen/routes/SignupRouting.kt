@@ -2,16 +2,13 @@ package ru.durchschlagen.routes
 
 import User
 import UserRoleType
-import getUserName
+import getToken
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.util.Base64
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import userLastId
 import userStorage
 
@@ -55,21 +52,7 @@ fun Route.signUpRouting() {
 
             userStorage.add(user)
 
-            call.respond(
-                ResponseSignIn(
-                    tkn = Base64.getEncoder().encodeToString(
-                        Json.encodeToString(
-                            ResponseUserDTO(
-                                id = user.id,
-                                name = getUserName(user.id),
-                                email = user.email,
-                                role = user.role
-                            )
-                        ).toByteArray()
-                    )
-                )
-            )
-            call.response.status(HttpStatusCode.Created)
+            call.respond(hashMapOf("token" to getToken(user)))
         }
     }
 }
