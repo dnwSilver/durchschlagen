@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        Дуршлаг
+        <img alt="durchschlagen" width={52} height={52} src="/logo512.png"/>
       </header>
       <LoginForm />
     </div>

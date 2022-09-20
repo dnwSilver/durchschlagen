@@ -1,9 +1,20 @@
-import { Button, Card, Elevation, FormGroup, InputGroup } from "@blueprintjs/core"
-import { useState } from "react";
+import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from "@blueprintjs/core"
+import {ChangeEvent, ChangeEventHandler, useState} from "react";
 import styles from './LoginForm.module.css'
 
 const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false)
+    const [loginIntent, setLoginIntent] = useState<Intent>()
+    const [login, setLogin] = useState<string>()
+
+    const handleSubmitForm = () => {
+        setLoginIntent(!login ? "danger" : undefined)
+    }
+
+    const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setLogin(e.target.value)
+        setLoginIntent(undefined)
+    }
 
     return <>
         <Card className={styles.login} elevation={Elevation.TWO}>
@@ -11,8 +22,13 @@ const LoginForm = () => {
             <FormGroup
                 label="Login"
                 labelFor="text-input"
-                labelInfo="(required)">
-                <InputGroup id="text-input" placeholder="bran@gmail.com" />
+                labelInfo="(required)"
+            >
+                <InputGroup intent={loginIntent}
+                            id="text-input"
+                            placeholder="bran@gmail.com"
+                            onChange={handleLoginChange}
+                            value={login}/>
             </FormGroup>
             <FormGroup
                 label="Password"
@@ -30,7 +46,7 @@ const LoginForm = () => {
                         />}
                 />
             </FormGroup>
-            <Button className="bp3-intent-primary">Submit</Button>
+            <Button className="bp3-intent-primary" onClick={handleSubmitForm}>Submit</Button>
         </Card>
     </>
 }
