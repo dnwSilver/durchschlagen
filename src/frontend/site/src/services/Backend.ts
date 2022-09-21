@@ -1,8 +1,29 @@
 import {AppToaster} from '../features/Toaster'
 
+export type Auction = {
+  status: 'ACTIVE' | 'CLOSE'
+  owner: string
+  title: string
+  end: string
+  cost: number
+  lot: {
+    name: string
+  }
+}
+const HOST = 'http://10.200.19.20:8080'
+
+const showUnhandledError = (error: string)=>{
+  AppToaster.show({
+    message: 'Oh no! Everything is broken. We\'ll definitely fix this, I guess.',
+    intent: 'danger',
+    timeout: 5000
+  })
+  console.error(error)
+}
+
 const backend = {
   async auth(login: string, password: string): Promise<string | undefined> {
-    await fetch('http://0.0.0.0:8080/signin', {
+    await fetch(`${HOST}/signin`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -20,16 +41,21 @@ const backend = {
       }
     })
       .catch((error)=>{
-        AppToaster.show({
-          message: 'Oh no! Everything is broken. We\'ll definitely fix this, I guess.',
-          intent: 'danger',
-          timeout: 5000
-        })
-
+        showUnhandledError(error)
         return undefined
       })
 
     return undefined
+  },
+  async getAuctions(): Promise<Auction[]> {
+    return await fetch(`${HOST}/auctions`, {
+      method: 'get'
+    }).then(response=>response.json())
+      .then(data=>data)
+      .catch((error)=>{
+        showUnhandledError(error)
+        return []
+      })
   }
 }
 

@@ -26,7 +26,7 @@ val auctionStorage = mutableListOf(
         title = "Fresh bread",
         lot_id = 2,
         owner_id = 1,
-        end = "2022.02.08 19:30",
+        end = "2023.02.08 19:30",
         cost = 1223
     ),
     Auction(
