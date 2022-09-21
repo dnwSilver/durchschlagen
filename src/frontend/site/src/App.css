@@ -1,5 +1,11 @@
 body {
-  background: linear-gradient(to right, #19547b, #ffd89b);
+  --color-accent: #0184A5;
+  --color-main: #9BBEAB;
+  --color-second: #C6BA25;
+  --color-second-sec: #B6D8E3;
+
+  background: linear-gradient(to bottom left, var(--color-main), var(--color-second));
+  min-height: 100vh;
 }
 
 .app {
@@ -10,7 +16,6 @@ body {
 
 .App {
   text-align: center;
-  ;
 }
 
 .App-logo {
