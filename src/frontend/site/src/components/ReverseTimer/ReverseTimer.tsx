@@ -3,6 +3,7 @@ import {FC, useEffect, useState} from 'react'
 type IProps = {
   endDate: Date
 }
+
 const ReverseTimer: FC<IProps> = (props)=>{
   const leftTime = new Date(props.endDate.getTime()-new Date().getTime())
   const [value, setValue] = useState(leftTime)

@@ -1,5 +1,9 @@
 import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core'
-import {FormEvent, useState}                                    from 'react'
+import {FormEvent, useEffect, useState}                         from 'react'
+import {useNavigate}                                            from 'react-router-dom'
+import {useRecoilState}                                         from 'recoil'
+import authTokenAtom                                            from '../../features/authToken'
+import {useLocalStorage}                                        from '../../hooks/useLocalStorage'
 import backend                                                  from '../../services/Backend'
 import styles                                                   from './LoginForm.module.css'
 
@@ -7,6 +11,10 @@ const LoginForm = ()=>{
   const [showPassword, setShowPassword] = useState(false)
   const [loginIntent, setLoginIntent] = useState<Intent>()
   const [passwordIntent, setPasswordIntent] = useState<Intent>()
+  const [authToken, setToken] = useLocalStorage('token', '')
+  const [, setTokenInMemory] = useRecoilState<string>(authTokenAtom)
+
+  let navigate = useNavigate()
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
@@ -22,9 +30,17 @@ const LoginForm = ()=>{
 
     const token = await backend.auth(login, password)
     if(token){
-
+      setToken(token)
     }
   }
+
+  useEffect(()=>{
+    if(authToken){
+      navigate('/')
+      setTokenInMemory(authToken)
+    }
+  }, [navigate, authToken, setTokenInMemory])
+
   return <>
     <Card className={styles.login} elevation={Elevation.TWO}>
       <h1>Create account</h1>

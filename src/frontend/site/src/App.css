@@ -29,18 +29,22 @@ body {
   }
 }
 
+a {
+  outline: 0 !important;
+}
+
 .App-header {
   min-height: 4vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 2rem;
+  color: var(--color-accent);
+  padding: 2rem;
 }
 
 .App-link {
-  color: #61dafb;
+  color: var(--color-second-sec);
 }
 
 @keyframes App-logo-spin {
@@ -51,4 +55,8 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-main);
 }
