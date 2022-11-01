@@ -16,7 +16,7 @@ const HOST = 'http://0.0.0.0:8080'
 
 const showUnhandledError = (error: string)=>{
   AppToaster.show({
-    message: 'Oh no! Everything is broken. We\'ll definitely fix this, I guess.',
+    message: 'Oh no! Everything is broken 🤦🏻‍♂️. We\'ll definitely fix this, I guess.',
     intent: 'danger',
     timeout: 5000
   })
@@ -58,6 +58,25 @@ const backend = {
         return []
       })
   },
+  async createAuction(auction: any): Promise<number | undefined> {
+    return await fetch(`${HOST}/auctions`, {
+      method: 'post',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(auction)
+    }).then(response=>response.json())
+      .then(data=>{
+        AppToaster.show({message: '🥂 Auction created!', intent: 'success', timeout: 1500})
+        return data.id
+      })
+      .catch((error)=>{
+        showUnhandledError(error)
+        return null
+      })
+  },
   async getLots(): Promise<Lot[]> {
     return await fetch(`${HOST}/lots`, {
       method: 'get',
@@ -71,6 +90,7 @@ const backend = {
         return []
       })
   },
+
   async getMe(): Promise<User | null> {
     return await fetch(`${HOST}/signin`, {
       method: 'get',

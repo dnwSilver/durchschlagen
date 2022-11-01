@@ -1,6 +1,7 @@
 import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core'
 import {FormEvent, useEffect, useState}                         from 'react'
 import {useNavigate}                                            from 'react-router-dom'
+import backend                                                  from '../../services/Backend'
 import LotSelect                                                from '../../components/LotSelect/LotSelect'
 import Lot                                                      from '../../domain/Lot'
 import {useCurrentUser}                                         from '../../hooks/useCurrentUser'
@@ -11,6 +12,8 @@ const AuctionForm = ()=>{
   const [finishIntent, setFinishIntent] = useState<Intent>()
   const [selectedLot, setSetSelectedLot] = useState<Lot | undefined>()
   const user = useCurrentUser()
+  const [createdAuctionId, setCreatedAuctionId] = useState<number>()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
@@ -23,18 +26,29 @@ const AuctionForm = ()=>{
 
     const finish = elements['finish'].value
     setFinishIntent(!finish ? 'danger' : undefined)
-    // setPasswordIntent(!elements['password'].value ? 'danger' : undefined)
 
-    if(title&&cost&&finish)
-      alert(JSON.stringify({title, cost, finish, owner_id: user?.user_id, lot_id: selectedLot?.id}))
-
+    if(title&&cost&&finish&&user?.user_id&&selectedLot?.id){
+      const auctionId = await backend.createAuction({
+        title,
+        cost,
+        end: finish,
+        owner_id: user?.user_id,
+        lot_id: selectedLot?.id
+      })
+      console.log(auctionId)
+      auctionId&&setCreatedAuctionId(auctionId)
+    }
   }
 
   const handleLotChange = (lot: Lot | undefined)=>{
     setSetSelectedLot(lot)
   }
 
-  return <Card elevation={Elevation.TWO}>
+  useEffect(()=>{
+    createdAuctionId&&navigate(`/auction/${createdAuctionId}`)
+  }, [navigate, createdAuctionId])
+
+  return <Card style={{width: 400, margin: 'auto'}} elevation={Elevation.TWO}>
     <h1>Create your auction</h1>
     <form onSubmit={handleSubmit}>
       <FormGroup
