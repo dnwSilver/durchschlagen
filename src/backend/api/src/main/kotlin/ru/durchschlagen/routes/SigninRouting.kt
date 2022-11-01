@@ -4,6 +4,7 @@ import UserRoleType
 import getToken
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -12,6 +13,17 @@ import userStorage
 
 fun Route.signInRouting() {
     route("/signin") {
+        authenticate("jwt-auth") {
+            get {
+                val userId = call.getCurrentUserId()
+                val user =
+                    userStorage.find { it.id == userId } ?: return@get call.respondText(
+                        "Incorrect user id", status = HttpStatusCode.NotFound
+                    )
+
+                call.respond(user)
+            }
+        }
         post {
             val body = call.receive<RequestBodyDTO>()
 

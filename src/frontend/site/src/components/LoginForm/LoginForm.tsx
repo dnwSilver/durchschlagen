@@ -2,6 +2,7 @@ import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprint
 import {FormEvent, useEffect, useState}                         from 'react'
 import {useNavigate}                                            from 'react-router-dom'
 import {useRecoilState}                                         from 'recoil'
+import {useCurrentUser}                                         from '../../hooks/useCurrentUser'
 import authTokenAtom                                            from '../../features/authToken'
 import {useLocalStorage}                                        from '../../hooks/useLocalStorage'
 import backend                                                  from '../../services/Backend'
@@ -13,6 +14,8 @@ const LoginForm = ()=>{
   const [passwordIntent, setPasswordIntent] = useState<Intent>()
   const [authToken, setToken] = useLocalStorage('token', '')
   const [, setTokenInMemory] = useRecoilState<string>(authTokenAtom)
+  const [needUpdateUser, setNeedUpdateUser] = useState<boolean>()
+  const user = useCurrentUser()
 
   let navigate = useNavigate()
 
@@ -23,7 +26,6 @@ const LoginForm = ()=>{
     const password = elements['password'].value
     setLoginIntent(!login ? 'danger' : undefined)
     setPasswordIntent(!elements['password'].value ? 'danger' : undefined)
-
     if(!(login&&password)){
       return
     }
@@ -31,19 +33,27 @@ const LoginForm = ()=>{
     const token = await backend.auth(login, password)
     if(token){
       setToken(token)
+      setNeedUpdateUser(true)
     }
   }
 
   useEffect(()=>{
-    if(authToken){
+    if(user&&new Date(user.exp*1000).getTime()>new Date().getTime()){
       navigate('/')
       setTokenInMemory(authToken)
     }
-  }, [navigate, authToken, setTokenInMemory])
+  }, [navigate, authToken, setTokenInMemory, user])
+
+  useEffect(()=>{
+    if(needUpdateUser){
+      navigate('/')
+      setTokenInMemory(authToken)
+    }
+  }, [authToken, navigate, needUpdateUser, setTokenInMemory])
 
   return <>
     <Card className={styles.login} elevation={Elevation.TWO}>
-      <h1>Create account</h1>
+      <h1>Sell all you can 💵</h1>
       <form onSubmit={handleSubmit}>
         <FormGroup
           label="Login"

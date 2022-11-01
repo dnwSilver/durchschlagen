@@ -1,3 +1,5 @@
+import User         from '../domain/User'
+import Lot          from '../domain/Lot'
 import {AppToaster} from '../features/Toaster'
 
 export type Auction = {
@@ -55,7 +57,34 @@ const backend = {
         showUnhandledError(error)
         return []
       })
+  },
+  async getLots(): Promise<Lot[]> {
+    return await fetch(`${HOST}/lots`, {
+      method: 'get',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(response=>response.json())
+      .then(data=>data)
+      .catch((error)=>{
+        showUnhandledError(error)
+        return []
+      })
+  },
+  async getMe(): Promise<User | null> {
+    return await fetch(`${HOST}/signin`, {
+      method: 'get',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(response=>response.json())
+      .then(data=>data)
+      .catch((error)=>{
+        showUnhandledError(error)
+        return null
+      })
   }
+
 }
 
 export default backend

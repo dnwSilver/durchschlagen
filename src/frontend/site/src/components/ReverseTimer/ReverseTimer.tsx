@@ -5,11 +5,10 @@ type IProps = {
 }
 
 const ReverseTimer: FC<IProps> = (props)=>{
-  const leftTime = new Date(props.endDate.getTime()-new Date().getTime())
-  const [value, setValue] = useState(leftTime)
+  const [leftTime, setSetLeftTime] = useState(new Date(props.endDate.getTime()-new Date().getTime()))
 
   useEffect(()=>{
-    const interval = setInterval(()=>setValue(new Date(props.endDate.getTime()-new Date().getTime())), 1000)
+    const interval = setInterval(()=>setSetLeftTime(new Date(props.endDate.getTime()-new Date().getTime())), 1000)
 
     return ()=>{
       clearInterval(interval)
@@ -17,10 +16,11 @@ const ReverseTimer: FC<IProps> = (props)=>{
   }, [props.endDate])
 
   return (
-    <div>
-      <p>Current time: </p>
-      <>{value.getFullYear() - 1970} {value.getMonth()} {value.toLocaleTimeString()}</>
-    </div>
+    <p>
+      Finish time:&nbsp;
+      {Math.floor(leftTime.getTime()/(1000*60*60*24))} days&nbsp;
+      {leftTime.toLocaleString('ru-RU', {hour: 'numeric', minute: 'numeric', second: 'numeric'})}
+    </p>
   )
 }
 

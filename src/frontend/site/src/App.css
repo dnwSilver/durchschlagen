@@ -1,5 +1,5 @@
 body {
-  --color-accent: #0184A5;
+  --color-accent: #215db0;
   --color-main: #9BBEAB;
   --color-second: #C6BA25;
   --color-second-sec: #B6D8E3;
@@ -38,13 +38,21 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: var(--color-accent);
   padding: 2rem;
+  align-items: center;
+  gap: 1rem;
+
 }
 
 .App-link {
-  color: var(--color-second-sec);
+  display: flex;
+  color: var(--color-accent);
+  align-content: center;
+  gap: 0.25rem;
+  align-items: baseline;
+  flex-grow: 1;
 }
 
 @keyframes App-logo-spin {

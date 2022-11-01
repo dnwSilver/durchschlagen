@@ -59,9 +59,9 @@ fun Route.lotsRouting() {
     }
 }
 
-private fun ApplicationCall.getCurrentUserId(): Int {
+public fun ApplicationCall.getCurrentUserId(): Int {
     val principal = this.principal<JWTPrincipal>()
-    return principal!!.payload.getClaim("user_id").asString().toInt()
+    return principal!!.payload.getClaim("user_id").asInt()
 }
 
 @Serializable
