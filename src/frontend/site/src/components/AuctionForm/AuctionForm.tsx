@@ -24,14 +24,14 @@ const AuctionForm = ()=>{
     const cost = elements['cost'].value
     setCostIntent(!cost ? 'danger' : undefined)
 
-    const finish = elements['finish'].value
-    setFinishIntent(!finish ? 'danger' : undefined)
+    const finish = new Date(elements['finish'].value)
+    setFinishIntent((!finish || isNaN(finish.getTime())) ? 'danger' : undefined)
 
-    if(title&&cost&&finish&&user?.user_id&&selectedLot?.id){
+    if(title&&cost&& !isNaN(finish.getTime())&&user?.user_id&&selectedLot?.id){
       const auctionId = await backend.createAuction({
         title,
         cost,
-        end: finish,
+        end: new Date(finish).getTime()/1000,
         owner_id: user?.user_id,
         lot_id: selectedLot?.id
       })
@@ -71,9 +71,12 @@ const AuctionForm = ()=>{
         <InputGroup
           intent={costIntent}
           id="cost"
-          onChange={()=>setCostIntent(undefined)}
+          onChange={(event)=>{
+            event.target.value = event.target.value.replaceAll(/\D+/g, '')
+            setCostIntent(undefined)
+          }}
           onBlur={()=>setCostIntent(undefined)}
-          placeholder="1233"/>
+          placeholder="12000"/>
       </FormGroup>
       <FormGroup
         label="Finish date"
@@ -85,7 +88,7 @@ const AuctionForm = ()=>{
           id="finish"
           onChange={()=>setFinishIntent(undefined)}
           onBlur={()=>setFinishIntent(undefined)}
-          placeholder="23.07.2022"/>
+          placeholder="2022/07/23"/>
       </FormGroup>
       <FormGroup
         label="Lot"
