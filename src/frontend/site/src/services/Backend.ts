@@ -79,6 +79,22 @@ const backend = {
         return null
       })
   },
+  async sendComment(auctionId: string, message: string): Promise<void> {
+    return await fetch(`${HOST}/auctions/${auctionId}/comment`, {
+      method: 'post',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({message: message})
+    }).then(()=>{
+      AppToaster.show({message: '🍸 Comment created!', intent: 'success', timeout: 1500})
+    })
+      .catch((error)=>{
+        showUnhandledError(error)
+      })
+  },
   async getLots(): Promise<Lot[]> {
     return await fetch(`${HOST}/lots`, {
       method: 'get',
