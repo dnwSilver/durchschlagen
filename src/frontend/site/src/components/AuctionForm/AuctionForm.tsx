@@ -25,7 +25,7 @@ const AuctionForm = ()=>{
     setCostIntent(!cost ? 'danger' : undefined)
 
     const finish = new Date(elements['finish'].value)
-    setFinishIntent((!finish || isNaN(finish.getTime())) ? 'danger' : undefined)
+    setFinishIntent((!finish||isNaN(finish.getTime())) ? 'danger' : undefined)
 
     if(title&&cost&& !isNaN(finish.getTime())&&user?.user_id&&selectedLot?.id){
       const auctionId = await backend.createAuction({

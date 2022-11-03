@@ -2,6 +2,7 @@ import './App.css'
 import {Icon}                from '@blueprintjs/core'
 import {Link, Route, Routes} from 'react-router-dom'
 import {RecoilRoot}          from 'recoil'
+import Auction               from './components/Auction/Auction'
 import AuthContainer         from './components/AuthContainer/AuthContainer'
 import AuctionForm           from './components/AuctionForm/AuctionForm'
 import UserInfo              from './components/UserInfo/UserInfo'
@@ -25,6 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Auctions/>}/>
           <Route path="/login" element={<LoginForm/>}/>
+          <Route path="/auction/:auctionId" element={<Auction/>}/>
           <Route path="/auction/create" element={<AuthContainer><AuctionForm/></AuthContainer>}/>
         </Routes>
 

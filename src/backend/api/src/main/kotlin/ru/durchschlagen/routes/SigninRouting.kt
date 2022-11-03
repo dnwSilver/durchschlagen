@@ -14,10 +14,10 @@ import userStorage
 fun Route.signInRouting() {
     route("/signin") {
         authenticate("jwt-auth") {
-            get {
-                val userId = call.getCurrentUserId()
+            get("/{id?}") {
+                val userId = call.parameters["id"] ?: call.getCurrentUserId()
                 val user =
-                    userStorage.find { it.id == userId } ?: return@get call.respondText(
+                    userStorage.findLast { userId.toString().contains(it.id.toString()) } ?: return@get call.respondText(
                         "Incorrect user id", status = HttpStatusCode.NotFound
                     )
 

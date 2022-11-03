@@ -1,17 +1,9 @@
 import User         from '../domain/User'
 import Lot          from '../domain/Lot'
 import {AppToaster} from '../features/Toaster'
+import Auction      from '../domain/Auction'
+import Comment      from '../domain/Comment'
 
-export type Auction = {
-  status: 'ACTIVE' | 'CLOSE'
-  owner: string
-  title: string
-  end: string
-  cost: number
-  lot: {
-    name: string
-  }
-}
 const HOST = 'http://0.0.0.0:8080'
 
 const showUnhandledError = (error: string)=>{
@@ -50,6 +42,16 @@ const backend = {
   },
   async getAuctions(): Promise<Auction[]> {
     return await fetch(`${HOST}/auctions`, {
+      method: 'get'
+    }).then(response=>response.json())
+      .then(data=>data)
+      .catch((error)=>{
+        showUnhandledError(error)
+        return []
+      })
+  },
+  async getAuction(auctionId: string): Promise<Auction> {
+    return await fetch(`${HOST}/auctions/${auctionId}`, {
       method: 'get'
     }).then(response=>response.json())
       .then(data=>data)

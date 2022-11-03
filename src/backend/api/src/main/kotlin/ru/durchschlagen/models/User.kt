@@ -3,6 +3,12 @@ import com.auth0.jwt.algorithms.Algorithm
 import java.util.Date
 import kotlinx.serialization.Serializable
 
+enum class UserRoleType {
+    ADMIN, CUSTOMER
+}
+
+var userLastId = 3
+
 @Serializable
 data class User(
     val id: Int,
@@ -13,12 +19,6 @@ data class User(
     val email: String,
     val role: UserRoleType,
 )
-
-enum class UserRoleType {
-    ADMIN, CUSTOMER
-}
-
-var userLastId = 3
 
 val userStorage = mutableListOf(
     User(
