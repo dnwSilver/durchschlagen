@@ -13,34 +13,30 @@ import ru.durchschlagen.models.Auction
 import ru.durchschlagen.models.AuctionStatus
 import ru.durchschlagen.models.Bet
 import ru.durchschlagen.models.Comment
-import ru.durchschlagen.models.auctionLastId
-import ru.durchschlagen.models.auctionStorage
-import ru.durchschlagen.models.betLastId
-import ru.durchschlagen.models.betStorage
-import ru.durchschlagen.models.commentLastId
-import ru.durchschlagen.models.commentStorage
-import ru.durchschlagen.models.lotStorage
+import ru.durchschlagen.providers.createAuction
+import ru.durchschlagen.providers.createBet
+import ru.durchschlagen.providers.createComment
+import ru.durchschlagen.providers.readAuctions
+import ru.durchschlagen.providers.readBets
+import ru.durchschlagen.providers.readCommentsByAuctionId
+import ru.durchschlagen.providers.readLotById
 
 fun Route.auctionRouting() {
     route("/auctions") {
         get {
-            if (auctionStorage.isNotEmpty()) {
-                val query = call.parameters["search"]
-                val auctions = auctionStorage.filter { auction ->
-                    if (auction.title != null && query != null) auction.title?.contains(
-                        query, ignoreCase = true
-                    ) == true
-                    else true
-                }.map { responseAuctionDTOBuilder(it) }
-                call.respond(auctions)
-            } else {
-                call.respondText("No auction found", status = HttpStatusCode.OK)
-            }
+            val query = call.parameters["search"]
+            val auctions =
+                readAuctions("", query)?.map { responseAuctionDTOBuilder(it) } ?: return@get call.respondText(
+                    "No auction found",
+                    status = HttpStatusCode.OK
+                )
+
+            call.respond(auctions)
         }
         get("{id?}") {
             val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
             val auction =
-                auctionStorage.find { it.id.toString() == id } ?: return@get call.respond(HttpStatusCode.NotFound)
+                readAuctions(id)?.first() ?: return@get call.respond(HttpStatusCode.NotFound)
             call.respond(
                 HttpStatusCode.OK, responseAuctionDTOBuilder(auction)
             )
@@ -63,28 +59,28 @@ fun Route.auctionRouting() {
                 "Missing lot_id", status = HttpStatusCode.BadRequest
             )
 
-            val newAuction = Auction(
-                id = ++auctionLastId,
-                status = AuctionStatus.ACTIVE,
-                title = body.title,
-                lot_id = body.lot_id,
-                owner_id = body.owner_id,
-                end = body.end,
-                cost = body.cost
+            createAuction(
+                Auction(
+                    id = 0,
+                    status = AuctionStatus.ACTIVE,
+                    title = body.title,
+                    lot_id = body.lot_id,
+                    owner_id = body.owner_id,
+                    finish = body.end,
+                    cost = body.cost
+                )
             )
-            auctionStorage.add(newAuction)
-            call.respond(newAuction)
+
             call.response.status(HttpStatusCode.Created)
         }
         patch("{id?}") {
             val id = call.parameters["id"] ?: return@patch call.respond(HttpStatusCode.BadRequest)
-            val auction =
-                auctionStorage.find { it.id.toString() == id } ?: return@patch call.respond(HttpStatusCode.NotFound)
+            val auction = readAuctions(id)?.first() ?: return@patch call.respond(HttpStatusCode.NotFound)
 
             val body = call.receive<RequestAuctionDTO>()
             body.owner_id?.let { auction.owner_id = it }
             body.title?.let { auction.title = it }
-            body.end?.let { auction.end = it }
+            body.end?.let { auction.finish = it }
             body.cost?.let { auction.cost = it }
             body.lot_id?.let { auction.lot_id = it }
             call.respond(auction)
@@ -92,36 +88,38 @@ fun Route.auctionRouting() {
         }
         post("{id}/bet") {
             val auctionId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-            auctionStorage.find { it.id.toString() == auctionId } ?: return@post call.respond(HttpStatusCode.NotFound)
+            readAuctions(auctionId) ?: return@post call.respond(HttpStatusCode.NotFound)
             val body = call.receive<RequestBetDTO>()
             val betCost = body.cost ?: return@post call.respondText(
                 "Missing bet cost", status = HttpStatusCode.BadRequest
             )
-            val bet = Bet(
-                id = ++betLastId,
-                cost = betCost,
-                owner_id = 1,
-                auction_id = auctionId.toInt(),
-                date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))
+            createBet(
+                Bet(
+                    id = 0,
+                    cost = betCost,
+                    owner_id = 1,
+                    auction_id = auctionId.toInt(),
+                    date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))
+                )
             )
-            betStorage.add(bet)
             call.response.status(HttpStatusCode.Created)
         }
         post("{id}/comment") {
             val auctionId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-            auctionStorage.find { it.id.toString() == auctionId } ?: return@post call.respond(HttpStatusCode.NotFound)
+            readAuctions(auctionId) ?: return@post call.respond(HttpStatusCode.NotFound)
             val body = call.receive<RequestCommentDTO>()
             val message = body.message ?: return@post call.respondText(
                 "Missing message", status = HttpStatusCode.BadRequest
             )
-            val comment = Comment(
-                id = ++commentLastId,
-                message = message,
-                owner_id = 1,
-                auction_id = auctionId.toInt(),
-                date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))
+            createComment(
+                Comment(
+                    id = 0,
+                    message = message,
+                    owner_id = 1,
+                    auction_id = auctionId.toInt(),
+                    send = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                )
             )
-            commentStorage.add(comment)
             call.response.status(HttpStatusCode.Created)
         }
     }
@@ -151,28 +149,22 @@ fun responseAuctionDTOBuilder(auction: Auction): ResponseAuctionDTO {
         id = auction.id,
         status = auction.status,
         owner = getUserName(auction.owner_id),
-        lot = lotStorage.find {
-            it.id == auction.lot_id
-        }.let {
+        lot = readLotById(auction.lot_id).let {
             ResponseAuctionDTO.ResponseLotDTO(it?.name, it?.preview)
         },
-        bets = betStorage.filter {
-            it.auction_id == auction.id
-        }.map { bet ->
+        bets = readBets(auction.id).map { bet ->
             ResponseAuctionDTO.ResponseBetDTO(
                 owner = getUserName(bet.owner_id), date = bet.date, cost = bet.cost
             )
         },
-        comments = commentStorage.filter { comment ->
-            comment.auction_id == auction.id
-        }.map { comment ->
+        comments = readCommentsByAuctionId(auction.id.toString()).map { comment ->
             ResponseAuctionDTO.ResponseCommentDTO(
-                owner = getUserName(comment.owner_id), message = comment.message, date = comment.date
+                owner = getUserName(comment.owner_id), message = comment.message, date = comment.send
             )
         },
         cost = auction.cost,
         title = auction.title,
-        end = auction.end,
+        end = auction.finish,
     )
 }
 

@@ -9,17 +9,16 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
-import userStorage
+import ru.durchschlagen.providers.readUser
 
 fun Route.signInRouting() {
     route("/signin") {
         authenticate("jwt-auth") {
             get("/{id?}") {
                 val userId = call.parameters["id"] ?: call.getCurrentUserId()
-                val user =
-                    userStorage.findLast { userId.toString().contains(it.id.toString()) } ?: return@get call.respondText(
-                        "Incorrect user id", status = HttpStatusCode.NotFound
-                    )
+                val user = readUser(userId.toString()) ?: return@get call.respondText(
+                    "Incorrect user id", status = HttpStatusCode.NotFound
+                )
 
                 call.respond(user)
             }
@@ -35,7 +34,7 @@ fun Route.signInRouting() {
             )
 
             val user =
-                userStorage.find { it.login == login && it.password == password } ?: return@post call.respondText(
+                readUser(null, login = login, password = password) ?: return@post call.respondText(
                     "Incorrect login and password pair", status = HttpStatusCode.Unauthorized
                 )
 

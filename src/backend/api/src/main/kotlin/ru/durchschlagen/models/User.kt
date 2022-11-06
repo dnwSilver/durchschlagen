@@ -2,12 +2,11 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import java.util.Date
 import kotlinx.serialization.Serializable
+import ru.durchschlagen.providers.readUser
 
 enum class UserRoleType {
     ADMIN, CUSTOMER
 }
-
-var userLastId = 3
 
 @Serializable
 data class User(
@@ -20,37 +19,7 @@ data class User(
     val role: UserRoleType,
 )
 
-val userStorage = mutableListOf(
-    User(
-        id = 1,
-        login = "Jean",
-        password = "24601",
-        firstName = "Jean",
-        lastName = "Valjean",
-        email = "Les@Misérables.fr",
-        role = UserRoleType.CUSTOMER
-    ), User(
-        id = 2,
-        login = "Javert",
-        password = "stars",
-        firstName = "Javert",
-        lastName = "Inspector",
-        email = "Javert@Misérables.fr",
-        role = UserRoleType.CUSTOMER
-    ), User(
-        id = 3,
-        login = "Gavroche",
-        password = "thekingisdeatch",
-        firstName = "Gavroche",
-        lastName = "Thénardier",
-        email = "Gavroche@Misérables.fr",
-        role = UserRoleType.CUSTOMER
-    )
-)
-
-fun getUserName(userId: Int): String = userStorage.find {
-    it.id == userId
-}.let {
+fun getUserName(userId: Int): String = readUser(userId.toString()).let {
     "${it?.firstName} ${it?.lastName}"
 }
 

@@ -9,8 +9,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
-import userLastId
-import userStorage
+import ru.durchschlagen.providers.createUser
+import ru.durchschlagen.providers.readUser
 
 fun Route.signUpRouting() {
     route("/signup") {
@@ -34,14 +34,12 @@ fun Route.signUpRouting() {
                 "Missing firstname", status = HttpStatusCode.BadRequest
             )
 
-            if (userStorage.find { it.login == login || it.email == email } != null) {
-                return@post call.respondText(
-                    "User already created", status = HttpStatusCode.Conflict
-                )
-            }
+            readUser(login, email) ?: return@post call.respondText(
+                "User already created", status = HttpStatusCode.Conflict
+            )
 
             val user = User(
-                id = ++userLastId,
+                id = 0,
                 login = login,
                 password = password,
                 email = email,
@@ -50,7 +48,7 @@ fun Route.signUpRouting() {
                 role = UserRoleType.CUSTOMER
             )
 
-            userStorage.add(user)
+            createUser(user)
 
             call.respond(hashMapOf("token" to getToken(user)))
         }
