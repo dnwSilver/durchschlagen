@@ -5,6 +5,7 @@
   width: 80%;
   /*background-color: red;*/
   gap: 3%;
+  justify-content: center;
 }
 
 .auction {

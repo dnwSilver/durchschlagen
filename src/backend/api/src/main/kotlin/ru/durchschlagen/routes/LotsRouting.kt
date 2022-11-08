@@ -34,6 +34,7 @@ fun Route.lotsRouting() {
                 call.response.status(HttpStatusCode.Created)
             }
             patch("{id?}") {
+
 //                val id = call.parameters["id"] ?: return@patch call.respond(HttpStatusCode.BadRequest)
 //                val lot =
 //                    lotStorage.find { it.id.toString() == id } ?: return@patch call.respond(HttpStatusCode.NotFound)

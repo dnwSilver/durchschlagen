@@ -22,6 +22,7 @@ const XSSExploit = (message: string | undefined)=>{
 const AuctionFullInfo = ()=>{
 
   const [auction, setAuction] = useState<Auction>()
+  const [loading, setLoading] = useState(true)
 
   let {auctionId} = useParams()
 
@@ -32,6 +33,7 @@ const AuctionFullInfo = ()=>{
 
     fetchAuctions().catch(console.error)
   }, [auctionId])
+
   useEffect(()=>{
     updateComments()
   }, [auctionId, updateComments])
@@ -55,7 +57,6 @@ const AuctionFullInfo = ()=>{
           <p>{comment.owner}</p>
         </div>
       })}
-
     </Card>
   </>
 }
