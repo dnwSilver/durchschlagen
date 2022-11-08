@@ -23,7 +23,10 @@ import ru.durchschlagen.providers.readLotById
 
 fun Route.auctionRouting() {
     route("/auctions") {
+
         get {
+            logEndpointEntry(call)
+
             val query = call.parameters["search"]
             val auctions =
                 readAuctions("", query)?.map { responseAuctionDTOBuilder(it) } ?: return@get call.respondText(
@@ -34,6 +37,8 @@ fun Route.auctionRouting() {
             call.respond(auctions)
         }
         get("{id?}") {
+            logEndpointEntry(call)
+
             val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
             val auction =
                 readAuctions(id)?.first() ?: return@get call.respond(HttpStatusCode.NotFound)
@@ -42,6 +47,8 @@ fun Route.auctionRouting() {
             )
         }
         post {
+            logEndpointEntry(call)
+
             val body = call.receive<RequestAuctionDTO>()
             body.owner_id ?: return@post call.respondText(
                 "Missing owner", status = HttpStatusCode.BadRequest
@@ -74,6 +81,8 @@ fun Route.auctionRouting() {
             call.response.status(HttpStatusCode.Created)
         }
         patch("{id?}") {
+            logEndpointEntry(call)
+
             val id = call.parameters["id"] ?: return@patch call.respond(HttpStatusCode.BadRequest)
             val auction = readAuctions(id)?.first() ?: return@patch call.respond(HttpStatusCode.NotFound)
 
@@ -87,6 +96,8 @@ fun Route.auctionRouting() {
             call.response.status(HttpStatusCode.OK)
         }
         post("{id}/bet") {
+            logEndpointEntry(call)
+
             val auctionId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
             readAuctions(auctionId) ?: return@post call.respond(HttpStatusCode.NotFound)
             val body = call.receive<RequestBetDTO>()
@@ -105,6 +116,8 @@ fun Route.auctionRouting() {
             call.response.status(HttpStatusCode.Created)
         }
         post("{id}/comment") {
+            logEndpointEntry(call)
+
             val auctionId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
             readAuctions(auctionId) ?: return@post call.respond(HttpStatusCode.NotFound)
             val body = call.receive<RequestCommentDTO>()

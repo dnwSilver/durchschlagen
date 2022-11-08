@@ -16,13 +16,16 @@ fun Route.lotsRouting() {
     authenticate("jwt-auth") {
         route("/lots") {
             get {
+                logEndpointEntry(call)
+
                 val lots = readLotsByUserId(call.getCurrentUserId()) ?: return@get call.respondText(
-                    "No lots found",
-                    status = HttpStatusCode.OK
+                    "No lots found", status = HttpStatusCode.OK
                 )
                 call.respond(lots)
             }
             post {
+                logEndpointEntry(call)
+
                 val body = call.receive<RequestLotDTO>()
                 body.preview ?: return@post call.respondText(
                     "Missing preview", status = HttpStatusCode.BadRequest
@@ -34,6 +37,7 @@ fun Route.lotsRouting() {
                 call.response.status(HttpStatusCode.Created)
             }
             patch("{id?}") {
+                logEndpointEntry(call)
 
 //                val id = call.parameters["id"] ?: return@patch call.respond(HttpStatusCode.BadRequest)
 //                val lot =
@@ -46,6 +50,8 @@ fun Route.lotsRouting() {
 //                call.response.status(HttpStatusCode.OK)
             }
             delete("{id?}") {
+                logEndpointEntry(call)
+
 //                val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
 //                if (lotStorage.removeIf { it.id.toString() == id }) {
 //                    call.respondText("Lot removed correctly", status = HttpStatusCode.Accepted)

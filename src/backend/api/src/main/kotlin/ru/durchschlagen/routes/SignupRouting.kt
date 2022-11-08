@@ -15,6 +15,8 @@ import ru.durchschlagen.providers.readUser
 fun Route.signUpRouting() {
     route("/signup") {
         post {
+            logEndpointEntry(call)
+
             val body = call.receive<RequestSignUpDTO>()
             val login = body.login ?: return@post call.respondText(
                 "Missing login", status = HttpStatusCode.BadRequest

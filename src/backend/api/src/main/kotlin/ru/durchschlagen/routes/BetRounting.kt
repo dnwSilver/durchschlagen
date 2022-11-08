@@ -8,6 +8,8 @@ import io.ktor.server.routing.*
 fun Route.betRouting() {
     route("/bets") {
         get {
+            logEndpointEntry(call)
+
             val error = """
                  [eventLoopGroupProxy-4-1] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ERROR: relation "bet" does not exist
  query: SELECT * FROM bet WHERE auction_id=1

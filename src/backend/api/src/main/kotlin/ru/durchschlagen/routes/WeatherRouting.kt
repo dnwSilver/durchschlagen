@@ -10,7 +10,7 @@ fun Route.weatherRouting() {
     //endpoint нужен для реализации SSRF атаки.
     route("/weather") {
         get("") {
-            call.application.environment.log.info("GET /api/v1!")
+            logEndpointEntry(call)
 
             val temperature = Random.nextInt(-30, 30)
             val emoji = when (temperature) {

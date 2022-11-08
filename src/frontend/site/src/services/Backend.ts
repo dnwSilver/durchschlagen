@@ -3,8 +3,8 @@ import Lot          from '../domain/Lot'
 import {AppToaster} from '../features/Toaster'
 import Auction      from '../domain/Auction'
 
-// const HOST = 'http://193.108.114.36:8080'
-const HOST = 'http://0.0.0.0:8080'
+const HOST = 'http://193.108.114.36:8080'
+// const HOST = 'http://0.0.0.0:8080'
 
 const showUnhandledError = (error: string)=>{
   AppToaster.show({

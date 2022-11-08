@@ -13,6 +13,8 @@ import ru.durchschlagen.providers.readUser
 fun Route.signInRouting() {
     route("/signin") {
         get("/{id?}") {
+            logEndpointEntry(call)
+
             val userId = call.parameters["id"] ?: call.getCurrentUserId()
             val user = readUser(userId.toString()) ?: return@get call.respondText(
                 "Incorrect user id", status = HttpStatusCode.NotFound
@@ -20,6 +22,8 @@ fun Route.signInRouting() {
             call.respond(user)
         }
         post {
+            logEndpointEntry(call)
+
             val body = call.receive<RequestBodyDTO>()
 
             val login = body.login ?: return@post call.respondText(
@@ -39,6 +43,7 @@ fun Route.signInRouting() {
         }
 
         delete("{id?}") {
+            logEndpointEntry(call)
             TODO("It will be soon")
         }
     }
