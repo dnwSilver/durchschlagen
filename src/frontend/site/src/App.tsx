@@ -28,6 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Auctions/>}/>
           <Route path="/login" element={<LoginForm/>}/>
+          <Route path="/ping" element={<>Pong</>}/>
           <Route path="/auction/:auctionId" element={<Auction/>}/>
           <Route path="/auction/create" element={<AuthContainer><AuctionForm/></AuthContainer>}/>
         </Routes>

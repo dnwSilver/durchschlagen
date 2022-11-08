@@ -3,6 +3,7 @@ import Lot          from '../domain/Lot'
 import {AppToaster} from '../features/Toaster'
 import Auction      from '../domain/Auction'
 
+// const HOST = 'http://193.108.114.36:8080'
 const HOST = 'http://0.0.0.0:8080'
 
 const showUnhandledError = (error: string)=>{
@@ -152,7 +153,6 @@ port = 5432                             # (change requires restart)
 #max_connections = 100                  # (change requires restart)
 */
 
-
 /**
  nano /var/lib/pgsql/11/data/pg_hba.conf
 
@@ -171,4 +171,3 @@ port = 5432                             # (change requires restart)
  host    replication     all             ::1/128                 ident
 
  */
-/
