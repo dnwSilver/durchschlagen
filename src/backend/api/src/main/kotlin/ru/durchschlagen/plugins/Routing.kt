@@ -7,6 +7,7 @@ import ru.durchschlagen.routes.betRouting
 import ru.durchschlagen.routes.lotsRouting
 import ru.durchschlagen.routes.signInRouting
 import ru.durchschlagen.routes.signUpRouting
+import ru.durchschlagen.routes.temperatureRouting
 import ru.durchschlagen.routes.weatherRouting
 
 fun Application.configureRouting() {
@@ -17,5 +18,6 @@ fun Application.configureRouting() {
         signUpRouting()
         betRouting()
         weatherRouting()
+        temperatureRouting()
     }
 }

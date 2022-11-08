@@ -2,6 +2,7 @@ import './App.css'
 import {Icon}                from '@blueprintjs/core'
 import {Link, Route, Routes} from 'react-router-dom'
 import {RecoilRoot}          from 'recoil'
+import WeatherWidget         from './components/WeatherWidget/WeatherWidget'
 import Auction               from './components/Auction/Auction'
 import AuthContainer         from './components/AuthContainer/AuthContainer'
 import AuctionForm           from './components/AuctionForm/AuctionForm'
@@ -20,6 +21,7 @@ function App() {
           <Link to="/"><img alt="durchschlagen" width={52} height={52} src="/logo512.png"/></Link>
           <Link className="App-link" to="/auction/create"><Icon size={20} icon="add" intent="primary"/>Create
             auction</Link>
+          <WeatherWidget/>
           <UserInfo/>
         </header>
 

@@ -2,7 +2,6 @@ import User         from '../domain/User'
 import Lot          from '../domain/Lot'
 import {AppToaster} from '../features/Toaster'
 import Auction      from '../domain/Auction'
-import Comment      from '../domain/Comment'
 
 const HOST = 'http://0.0.0.0:8080'
 
@@ -121,8 +120,55 @@ const backend = {
         showUnhandledError(error)
         return null
       })
-  }
+  },
 
+  async getWeather(): Promise<string> {
+    return await fetch(`${HOST}/temperature`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        service: `${HOST}/weather`
+      })
+    }).then(response=>response.json())
+      .then(data=>data.temperature)
+      .catch((error)=>{
+        showUnhandledError(error)
+        return null
+      })
+  }
 }
 
 export default backend
+/*
+nano /var/lib/pgsql/11/data/postgresql.conf
+listen_addresses = '*'                  # what IP address(es) to listen on;
+                                        # comma-separated list of addresses;
+                                        # defaults to 'localhost'; use '*' for all
+                                        # (change requires restart)
+port = 5432                             # (change requires restart)
+#max_connections = 100                  # (change requires restart)
+*/
+
+
+/**
+ nano /var/lib/pgsql/11/data/pg_hba.conf
+
+ # TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+ # "local" is for Unix domain socket connections only
+ local   all             all                                     peer
+ # IPv4 local connections:
+ host    all             all             0.0.0.0/0               trust
+ # IPv6 local connections:
+ host    all             all             ::1/128                 md5
+ # Allow replication connections from localhost, by a user with the
+ # replication privilege.
+ local   replication     all                                     peer
+ host    replication     all             127.0.0.1/32            ident
+ host    replication     all             ::1/128                 ident
+
+ */
+/
