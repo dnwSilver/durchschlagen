@@ -18,6 +18,7 @@ fun Route.signUpRouting() {
             logEndpointEntry(call)
 
             val body = call.receive<RequestSignUpDTO>()
+            println(body)
             val login = body.login ?: return@post call.respondText(
                 "Missing login", status = HttpStatusCode.BadRequest
             )
@@ -36,10 +37,12 @@ fun Route.signUpRouting() {
                 "Missing firstname", status = HttpStatusCode.BadRequest
             )
 
-            readUser(login, email) ?: return@post call.respondText(
-                "User already created", status = HttpStatusCode.Conflict
-            )
-
+            val findUser = readUser(null, login = login)
+            if (findUser != null) {
+                return@post call.respondText(
+                    "User already created", status = HttpStatusCode.Conflict
+                )
+            }
             val user = User(
                 id = 0,
                 login = login,

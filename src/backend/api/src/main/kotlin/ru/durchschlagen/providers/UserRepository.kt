@@ -24,17 +24,19 @@ fun readUser(id: String?, login: String? = null, password: String? = null): User
         val loginExpression = if (login == null) "" else " AND login='$login'"
 
         exec("SELECT * FROM users WHERE 1=1 $idExpression$passwordExpression$loginExpression") { rs ->
-            rs.next()
-            user = User(
-                id = rs.getInt("id"),
-                login = rs.getString("login"),
-                email = rs.getString("email"),
-                firstName = rs.getString("first_name"),
-                role = UserRoleType.CUSTOMER,
-                lastName = rs.getString("last_name"),
-                password = rs.getString("password")
-            )
-            if (id != null) cache[id] = user!!
+            user = if (!rs.isBeforeFirst) null else {
+                rs.next()
+                User(
+                    id = rs.getInt("id"),
+                    login = rs.getString("login"),
+                    email = rs.getString("email"),
+                    firstName = rs.getString("first_name"),
+                    role = UserRoleType.CUSTOMER,
+                    lastName = rs.getString("last_name"),
+                    password = rs.getString("password")
+                )
+            }
+            if (user != null) cache[user?.id.toString()] = user!!
         }
     }
 

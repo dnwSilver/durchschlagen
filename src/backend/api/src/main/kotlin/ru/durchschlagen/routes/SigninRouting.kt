@@ -16,7 +16,7 @@ fun Route.signInRouting() {
             logEndpointEntry(call)
 
             val userId = call.parameters["id"] ?: call.getCurrentUserId()
-            val user = readUser(userId.toString()) ?: return@get call.respondText(
+            val user = readUser(id = userId.toString()) ?: return@get call.respondText(
                 "Incorrect user id", status = HttpStatusCode.NotFound
             )
             call.respond(user)

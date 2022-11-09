@@ -12,6 +12,7 @@ import LoginForm             from './components/LoginForm/LoginForm'
 import 'normalize.css'
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
+import RegistrationForm      from './components/RegistrationForm/RegistrationForm'
 
 function App() {
   return (<RecoilRoot>
@@ -28,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Auctions/>}/>
           <Route path="/login" element={<LoginForm/>}/>
+          <Route path="/registration" element={<RegistrationForm/>}/>
           <Route path="/ping" element={<>Pong</>}/>
           <Route path="/auction/:auctionId" element={<Auction/>}/>
           <Route path="/auction/create" element={<AuthContainer><AuctionForm/></AuthContainer>}/>

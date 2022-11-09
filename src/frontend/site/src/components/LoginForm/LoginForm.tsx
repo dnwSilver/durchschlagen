@@ -1,7 +1,8 @@
 import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core'
 import {FormEvent, useEffect, useState}                         from 'react'
-import {useNavigate}                                            from 'react-router-dom'
+import {Link, useNavigate}                                      from 'react-router-dom'
 import {useRecoilState}                                         from 'recoil'
+import PasswordInput                                            from '../UIKit/PasswordInput/PasswordInput'
 import {useCurrentUser}                                         from '../../hooks/useCurrentUser'
 import authTokenAtom                                            from '../../features/authToken'
 import {useLocalStorage}                                        from '../../hooks/useLocalStorage'
@@ -9,9 +10,7 @@ import backend                                                  from '../../serv
 import styles                                                   from './LoginForm.module.css'
 
 const LoginForm = ()=>{
-  const [showPassword, setShowPassword] = useState(false)
   const [loginIntent, setLoginIntent] = useState<Intent>()
-  const [passwordIntent, setPasswordIntent] = useState<Intent>()
   const [authToken, setToken] = useLocalStorage('token', '')
   const [, setTokenInMemory] = useRecoilState<string>(authTokenAtom)
   const [needUpdateUser, setNeedUpdateUser] = useState<boolean>()
@@ -25,7 +24,6 @@ const LoginForm = ()=>{
     const login = elements['login'].value
     const password = elements['password'].value
     setLoginIntent(!login ? 'danger' : undefined)
-    setPasswordIntent(!elements['password'].value ? 'danger' : undefined)
     if(!(login&&password)){
       return
     }
@@ -71,23 +69,10 @@ const LoginForm = ()=>{
           label="Password"
           labelFor="password"
           labelInfo="(required)">
-          <InputGroup
-            placeholder="Enter your password..."
-            id="password"
-            intent={passwordIntent}
-            type={showPassword ? 'text' : 'password'}
-            onChange={()=>setPasswordIntent(undefined)}
-            onBlur={()=>setPasswordIntent(undefined)}
-            rightElement={
-              <Button
-                icon={showPassword ? 'unlock' : 'lock'}
-                intent="primary"
-                minimal={true}
-                onClick={()=>setShowPassword(!showPassword)}
-              />}
-          />
+          <PasswordInput id="password" placeholder="Enter your password..."/>
         </FormGroup>
         <Button type="submit" intent="primary" className="bp3-intent-primary">Submit</Button>
+        <Link style={{marginLeft: '1rem'}} to="/registration">Sign up</Link>
       </form>
     </Card>
   </>

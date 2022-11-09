@@ -16,6 +16,27 @@ const showUnhandledError = (error: string)=>{
 }
 
 const backend = {
+  async register(login: string, email: string, password: string, firstName: string, lastName: string) {
+    return await fetch(`${HOST}/signup`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({login, password, email, firstName, lastName})
+    })
+      .then(response=>{
+        if(response.status===200){
+          AppToaster.show({message: '💪 You have successfully signed up!', intent: 'success', timeout: 1500})
+        } else{
+          AppToaster.show({message: '🤯 Crap, this is bad. ', intent: 'warning', timeout: 1500})
+        }
+      })
+      .catch((error)=>{
+        showUnhandledError(error)
+        return undefined
+      })
+  },
   async auth(login: string, password: string): Promise<string | undefined> {
     return await fetch(`${HOST}/signin`, {
       method: 'post',
@@ -143,31 +164,3 @@ const backend = {
 }
 
 export default backend
-/*
-nano /var/lib/pgsql/11/data/postgresql.conf
-listen_addresses = '*'                  # what IP address(es) to listen on;
-                                        # comma-separated list of addresses;
-                                        # defaults to 'localhost'; use '*' for all
-                                        # (change requires restart)
-port = 5432                             # (change requires restart)
-#max_connections = 100                  # (change requires restart)
-*/
-
-/**
- nano /var/lib/pgsql/11/data/pg_hba.conf
-
- # TYPE  DATABASE        USER            ADDRESS                 METHOD
-
- # "local" is for Unix domain socket connections only
- local   all             all                                     peer
- # IPv4 local connections:
- host    all             all             0.0.0.0/0               trust
- # IPv6 local connections:
- host    all             all             ::1/128                 md5
- # Allow replication connections from localhost, by a user with the
- # replication privilege.
- local   replication     all                                     peer
- host    replication     all             127.0.0.1/32            ident
- host    replication     all             ::1/128                 ident
-
- */
