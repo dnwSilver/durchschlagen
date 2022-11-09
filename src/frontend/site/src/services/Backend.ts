@@ -61,8 +61,8 @@ const backend = {
         return undefined
       })
   },
-  async getAuctions(): Promise<Auction[]> {
-    return await fetch(`${HOST}/auctions`, {
+  async getAuctions(searchText: string | null): Promise<Auction[]> {
+    return await fetch(`${HOST}/auctions`+(searchText ? `?search=${searchText}` : ''), {
       method: 'get'
     }).then(response=>response.json())
       .then(data=>data)

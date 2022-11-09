@@ -1,10 +1,10 @@
 import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core'
 import {FormEvent, useEffect, useState}                         from 'react'
 import {useNavigate}                                            from 'react-router-dom'
-import backend                                                  from '../../services/Backend'
 import LotSelect                                                from '../../components/LotSelect/LotSelect'
 import Lot                                                      from '../../domain/Lot'
 import {useCurrentUser}                                         from '../../hooks/useCurrentUser'
+import backend                                                  from '../../services/Backend'
 
 const AuctionForm = ()=>{
   const [titleIntent, setTitleIntent] = useState<Intent>()
@@ -35,7 +35,6 @@ const AuctionForm = ()=>{
         owner_id: user?.user_id,
         lot_id: selectedLot?.id
       })
-      console.log(auctionId)
       auctionId&&setCreatedAuctionId(auctionId)
     }
   }

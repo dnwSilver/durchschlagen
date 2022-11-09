@@ -29,9 +29,9 @@ fun Route.auctionRouting() {
 
             val query = call.parameters["search"]
             val auctions =
-                readAuctions("", query)?.map { responseAuctionDTOBuilder(it) } ?: return@get call.respondText(
-                    "No auction found",
-                    status = HttpStatusCode.OK
+                readAuctions("", query)?.map { responseAuctionDTOBuilder(it) } ?: return@get call.respond(
+                    HttpStatusCode.OK,
+                    listOf<ResponseAuctionDTO>(),
                 )
 
             call.respond(auctions)
