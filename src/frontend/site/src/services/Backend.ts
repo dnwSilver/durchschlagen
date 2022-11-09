@@ -1,3 +1,4 @@
+import Bet          from '../domain/Bet'
 import User         from '../domain/User'
 import Lot          from '../domain/Lot'
 import {AppToaster} from '../features/Toaster'
@@ -71,6 +72,21 @@ const backend = {
         return []
       })
   },
+  async getBets(): Promise<Bet[]> {
+    return await fetch(`${HOST}/bets`,
+      {
+        method: 'get',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    ).then(response=>response.json())
+      .then(data=>data)
+      .catch((error)=>{
+        showUnhandledError(error)
+        return []
+      })
+  },
   async getAuction(auctionId: string): Promise<Auction> {
     return await fetch(`${HOST}/auctions/${auctionId}`, {
       method: 'get'
@@ -130,8 +146,8 @@ const backend = {
       })
   },
 
-  async getMe(): Promise<User | null> {
-    return await fetch(`${HOST}/signin`, {
+  async getMe(userId: number): Promise<User | null> {
+    return await fetch(`${HOST}/signin/${userId}`, {
       method: 'get',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
