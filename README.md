@@ -29,7 +29,7 @@
 1. `A09:2021` DoS атака через любой endpoint
 1. `A09:2021` Brute Force сервера по SSH пароль от сервера root/root
 1. `A10:2021` SSRF при загрузке изображения для создания карточки
-1. XSS редирект через ссылку возврата при авторизации
+1. `XSS` редирект через ссылку возврата при авторизации
 
 ## Endpoint
 
@@ -48,3 +48,22 @@
 1. `PATCH`  `/lots/{lot_id}`
 1. `DELETE` `/lots/{lot_id}`
 1. `POST`   `/payments`
+
+## Deployment
+
+```sh
+cd ./src/frontend/site &&
+nvm use 19 &&
+yarn &&
+rm -rf build &&
+yarn build &&
+rsync -a --progress build/* root@193.108.114.36:/var/www/html &&
+cd - &&
+cd ./src/backend/api &&
+./gradlew clean &&
+./gradlew distTar &&
+cd build &&
+tar -xvf distributions/api-0.0.1.tar &&
+rsync -a --progress api-0.0.1/* root@193.108.114.36:~/api
+cd -
+```

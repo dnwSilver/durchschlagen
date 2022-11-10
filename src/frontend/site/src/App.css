@@ -1,3 +1,19 @@
+body {
+  --color-accent: #215db0;
+  --color-main: #9BBEAB;
+  --color-second: #C6BA25;
+  --color-second-sec: #B6D8E3;
+
+  background: linear-gradient(to bottom left, var(--color-main), var(--color-second));
+  min-height: 100vh;
+}
+
+.app {
+  display: flex;
+  justify-content: center;
+  margin-top: 8%;
+}
+
 .App {
   text-align: center;
 }
@@ -13,26 +29,36 @@
   }
 }
 
+a {
+  outline: 0 !important;
+}
+
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  min-height: 4vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 2rem;
+  gap: 1rem;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
-  color: #61dafb;
+  display: flex;
+  align-content: center;
+  gap: 0.25rem;
 }
 
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-main);
 }

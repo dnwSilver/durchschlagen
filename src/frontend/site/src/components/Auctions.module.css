@@ -1,0 +1,14 @@
+.auctions {
+  display: flex;
+  margin: auto;
+  flex-wrap: wrap;
+  width: 80%;
+  /*background-color: red;*/
+  gap: 3%;
+  justify-content: center;
+}
+
+.auction {
+  width: 31%;
+  margin-bottom: 3%;
+}
