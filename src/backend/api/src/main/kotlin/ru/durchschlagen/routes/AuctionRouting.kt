@@ -108,7 +108,7 @@ fun Route.auctionRouting() {
                 Bet(
                     id = 0,
                     cost = betCost,
-                    owner_id = 1,
+                    owner_id = call.getCurrentUserId(),
                     auction_id = auctionId.toInt(),
                     date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))
                 )
@@ -128,7 +128,7 @@ fun Route.auctionRouting() {
                 Comment(
                     id = 0,
                     message = message,
-                    owner_id = 1,
+                    owner_id = call.getCurrentUserId(),
                     auction_id = auctionId.toInt(),
                     send = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
                 )

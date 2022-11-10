@@ -1,10 +1,9 @@
 import {Button, Classes, Drawer} from '@blueprintjs/core'
 import {FC, useState}            from 'react'
 import {Link}                    from 'react-router-dom'
-import User                      from '../../domain/User'
-import {useCurrentUser}          from '../../hooks/useCurrentUser'
-import Bets                      from '../Bets'
-import Me                        from '../Me'
+import {useCurrentUser}          from '../hooks/useCurrentUser'
+import Bets                      from './Bets'
+import Me                        from './Me'
 
 const UserInfo: FC = ()=>{
   const user = useCurrentUser()
@@ -26,7 +25,9 @@ const UserInfo: FC = ()=>{
         <Me/>
         <hr/>
         <Bets/>
-        <div style={{position: 'absolute', width:'100%', bottom: 0}} className={Classes.DRAWER_FOOTER}>Best user ever! ☝️</div>
+        <div style={{position: 'absolute', width: '100%', bottom: 0}} className={Classes.DRAWER_FOOTER}>☝ Best user
+          ever!️
+        </div>
       </Drawer>
     </>
   }

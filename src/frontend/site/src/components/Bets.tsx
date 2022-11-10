@@ -1,4 +1,4 @@
-import {H5, Spinner}         from '@blueprintjs/core'
+import {Callout, Spinner}    from '@blueprintjs/core'
 import {useEffect, useState} from 'react'
 import backend               from '../services/Backend'
 
@@ -15,9 +15,11 @@ const Bets = ()=>{
   }, [])
 
   return <div style={{margin: '2rem'}}>
-    <H5>My bets</H5>
     {loading&&<Spinner/>}
-    {!loading&&'😥 We were unable to obtain information on your bets./n Maybe try later?'}
+    {!loading&&<Callout intent="danger" title="😥 Holy cows, how?">
+        We were unable to obtain information on your bets.
+        <br/>Maybe try later?
+    </Callout>}
   </div>
 }
 

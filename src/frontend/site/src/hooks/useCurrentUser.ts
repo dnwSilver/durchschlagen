@@ -12,7 +12,12 @@ const parseJwt = (token: string): User=>{
   return JSON.parse(jsonPayload)
 }
 
-export const useCurrentUser = ()=>{
+export const useCurrentUser = (): User | null=>{
   const [authToken] = useRecoilState(authTokenAtom)
-  return authToken ? parseJwt(authToken) : null
+  const currentUser = authToken ? parseJwt(authToken) : null
+  if(currentUser&&new Date(currentUser.exp*1000).getTime()>new Date().getTime()){
+    document.cookie = `email:${currentUser?.email}`
+    return currentUser
+  } else
+    return null
 }

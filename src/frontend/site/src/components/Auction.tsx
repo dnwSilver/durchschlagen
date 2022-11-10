@@ -1,11 +1,11 @@
 import {Card, Spinner}                    from '@blueprintjs/core'
 import {useCallback, useEffect, useState} from 'react'
 import {Link, useParams}                  from 'react-router-dom'
-import CommentForm                        from '../../components/CommentForm/CommentForm'
-import Auction                            from '../../domain/Auction'
-import {useCurrentUser}                   from '../../hooks/useCurrentUser'
-import backend                            from '../../services/Backend'
-import AuctionInfo                        from '../../components/AuctionInfo/AuctionInfo'
+import CommentForm                        from './CommentForm'
+import Auction                            from '../domain/Auction'
+import {useCurrentUser}                   from '../hooks/useCurrentUser'
+import backend                            from '../services/Backend'
+import AuctionInfo                        from './AuctionInfo'
 
 const XSSExploit = (message: string | undefined)=>{
   if(!message){
@@ -50,22 +50,18 @@ const AuctionFullInfo = ()=>{
   }
 
   return <div style={{display: 'flex', justifyContent: 'center'}}>
-    <div style={{height: '60vh'}}>
-      <Card style={{width: 400, height: '80%', margin: 'auto'}}>
-        <AuctionInfo auction={auction}/>
-      </Card>
-      <Card style={{width: 400, height: '20%', margin: 'auto'}}>
-        {user&&<CommentForm onCommentCreate={updateComments} auctionId={auction.id.toString()}/>}
-        {!user&&<>
-            <p>😢</p>
-            <i>If you want to comment please <Link to="/login">sign in</Link> or <Link to="/registration">sign
-                up</Link> first.</i>
-        </>
-        }
-      </Card>
-    </div>
-
-    <Card style={{width: 400, height: '60vh', overflow: 'scroll'}}>
+    <Card style={{width: 400}}>
+      <AuctionInfo auction={auction}/>
+      <hr/>
+      {user&&<CommentForm onCommentCreate={updateComments} auctionId={auction.id.toString()}/>}
+      {!user&&<>
+          <p>😢</p>
+          <i>If you want to comment please <Link to="/login">sign in</Link> or <Link to="/registration">sign
+              up</Link> first.</i>
+      </>
+      }
+    </Card>
+    <Card style={{width: 400, overflow: 'scroll'}}>
       {auction?.comments.map((comment, idx)=>{
         XSSExploit(comment.message)
         return <div key={idx} style={{textAlign: 'start'}}>

@@ -1,8 +1,8 @@
 import {FC, PropsWithChildren, useEffect} from 'react'
 import {useNavigate}                      from 'react-router-dom'
 import {useRecoilState}                   from 'recoil'
-import authTokenAtom                      from '../../features/authToken'
-import {useCurrentUser}                   from '../../hooks/useCurrentUser'
+import authTokenAtom                      from '../features/authToken'
+import {useCurrentUser}                   from '../hooks/useCurrentUser'
 
 const AuthContainer: FC<PropsWithChildren> = ({children})=>{
   const navigate = useNavigate()
@@ -10,7 +10,7 @@ const AuthContainer: FC<PropsWithChildren> = ({children})=>{
   const [, setTokenInMemory] = useRecoilState<string>(authTokenAtom)
 
   useEffect(()=>{
-    if(!user||(user&&new Date(user.exp*1000).getTime()<new Date().getTime())){
+    if(!user){
       navigate('/login', {})
       setTokenInMemory('')
     }

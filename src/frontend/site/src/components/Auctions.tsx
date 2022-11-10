@@ -1,10 +1,10 @@
 import {Card, NonIdealState, Spinner} from '@blueprintjs/core'
 import {useEffect, useState}          from 'react'
 import {useSearchParams}              from 'react-router-dom'
-import AuctionInfo                    from '../../components/AuctionInfo/AuctionInfo'
-import backend                        from '../../services/Backend'
+import AuctionInfo                    from './AuctionInfo'
+import backend                        from '../services/Backend'
 import styles                         from './Auctions.module.css'
-import Auction                        from '../../domain/Auction'
+import Auction                        from '../domain/Auction'
 
 const Auctions = ()=>{
   const [auctions, setAuctions] = useState<Auction[]>([])

@@ -1,7 +1,7 @@
 import {Icon}       from '@blueprintjs/core'
 import {Link}       from 'react-router-dom'
-import ReverseTimer from '../../components/ReverseTimer/ReverseTimer'
-import Auction      from '../../domain/Auction'
+import ReverseTimer from './ReverseTimer'
+import Auction      from '../domain/Auction'
 
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',

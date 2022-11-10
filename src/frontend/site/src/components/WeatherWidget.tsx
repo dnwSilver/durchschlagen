@@ -1,6 +1,6 @@
 import {Spinner, SpinnerSize} from '@blueprintjs/core'
 import {useEffect, useState}  from 'react'
-import backend                from '../../services/Backend'
+import backend                from '../services/Backend'
 
 const WeatherWidget = ()=>{
   const [loading, setLoading] = useState(true)

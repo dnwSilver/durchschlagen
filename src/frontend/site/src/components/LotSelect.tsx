@@ -1,8 +1,8 @@
 import {Button, MenuItem}                     from '@blueprintjs/core'
 import {ItemPredicate, ItemRenderer, Select2} from '@blueprintjs/select'
 import {FC, useEffect, useState}              from 'react'
-import backend                                from '../../services/Backend'
-import Lot                                    from '../../domain/Lot'
+import backend                                from '../services/Backend'
+import Lot                                    from '../domain/Lot'
 
 const filterFilm: ItemPredicate<Lot> = (query, lot, _index, exactMatch)=>{
   const normalizedTitle = lot.name?.toLowerCase()

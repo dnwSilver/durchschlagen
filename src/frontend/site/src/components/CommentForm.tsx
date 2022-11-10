@@ -1,6 +1,6 @@
 import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core'
 import {FormEvent, useState}                   from 'react'
-import backend                                 from '../../services/Backend'
+import backend                                 from '../services/Backend'
 
 type Props = {
   auctionId: string
@@ -26,7 +26,6 @@ const CommentForm = (props: Props)=>{
     <FormGroup
       label="Message"
       labelFor="message"
-      labelInfo="(required)"
     >
       <InputGroup
         intent={messageIntent}
@@ -34,7 +33,7 @@ const CommentForm = (props: Props)=>{
         type="textarea"
         onChange={()=>setMessageIntent(undefined)}
         onBlur={()=>setMessageIntent(undefined)}
-        placeholder="What wrong with you man? 😳"/>
+        placeholder="Do you want to say something??? 😒"/>
     </FormGroup>
     <Button type="submit" intent="primary" className="bp3-intent-primary">✉️ Send comment</Button>
 

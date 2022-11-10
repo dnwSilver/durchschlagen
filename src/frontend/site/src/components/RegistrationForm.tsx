@@ -2,9 +2,9 @@ import {Button, Card, Elevation, FormGroup, InputGroup} from '@blueprintjs/core'
 import {FormEvent, useEffect, useState}                 from 'react'
 import Marquee                                          from 'react-fast-marquee'
 import {useNavigate}                                    from 'react-router-dom'
-import {AppToaster}                                     from '../../features/Toaster'
-import backend                                          from '../../services/Backend'
-import PasswordInput                                    from '../UIKit/PasswordInput/PasswordInput'
+import {AppToaster}                                     from '../features/Toaster'
+import backend                                          from '../services/Backend'
+import PasswordInput                                    from './UIKit/PasswordInput'
 
 const RegistrationForm = ()=>{
   const [needRedirect, setNeedRedirect] = useState<boolean>()
